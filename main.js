@@ -1,6 +1,73 @@
 const gameBoard = (function(){
     let arr = [[],[],[]];
-    let arrangefunc = function(){
+   
+
+    const getBoard=()=>arr;
+
+
+    return {getBoard};
+})();
+
+
+
+
+
+const gameController = (function(){
+
+    
+    const createPlayer = (sign)=>{
+        return{sign};
+    }
+    
+    const playerOne = createPlayer("X");
+    const playerTwo = createPlayer("O");
+    
+
+    let currentPlayer = playerOne;
+    const switchTurn = function(turn){
+        if(turn===playerOne){
+            currentPlayer=playerTwo;
+            return playerTwo;
+            
+        }
+
+        else{
+            currentPlayer=playerOne;
+            return playerOne;
+        }
+    }
+
+
+    const currentPlayerfunc = ()=>currentPlayer;
+
+    const findTie = function(){
+        let t = true;
+        arrn = gameBoard.getBoard();
+        for(i=0;i<arrn.length;i++){
+            for(j=0;j<arrn[0].length;j++){
+                if(arrn[i][j]===undefined){
+                    t = false;
+                }
+            }
+        }
+
+    };
+
+
+    let findWin = function(){
+        for(i=0;i<arr.length;i++){
+            for(j=0;j<arr[0].length;j++){
+               
+            }
+        }
+    }
+
+    return {playerOne,playerTwo,switchTurn,currentPlayerfunc,findTie,findWin}
+})();
+
+
+const screenController = (function(){
+    const arrangefunc = function(){
         const divs= document.querySelectorAll(".r");
         divs.forEach((div)=>{
             let divcl = (div.classList)[1];
@@ -8,62 +75,43 @@ const gameBoard = (function(){
             let i,j;
             i = digs[0];
             j=digs[1];
-            
-            div.innerHTML = arr[i][j]
+            div.innerHTML = gameBoard.getBoard()[i][j];
             
         });
     };
 
-    let putMark = function(player,i,j){
-        arr[i][j]=player.sign;
+
+    const putMark = function(player,i,j){
+        gameBoard.getBoard()[i][j]=gameController.currentPlayerfunc().sign;
         arrangefunc();
     };
 
-    let findTie = function(){
-        let t = true;
-        for(i=0;i<arr.length;i++){
-            for(j=0;j<arr[0].length;j++){
-                if(arr[i][j]===undefined){
-                    t = false;
-                }
-            }
-        }
-
-        console.log(t);
-
-
-
-    };
-
-
-    let findWin = function(){
-        
+    const disPlayer = function(){
+        const divpl = document.querySelector("h1");
+        divpl.innerHTML = `Player ${gameController.currentPlayerfunc().sign}`
     }
 
-    return {arr,arrangefunc,putMark,findTie};
+
+    return {arrangefunc,putMark,disPlayer};
 })();
 
 
 
-const game = function(player1,player2,gameBoard){
+const game = function(){
+    
+    player1 = gameController.playerOne;
+    player2 = gameController.playerTwo;
+   
     turn = player1;
-    console.log(turn);
     const divs = document.querySelectorAll(".r");
+    screenController.disPlayer();
     divs.forEach((div)=>{
         div.addEventListener('click',function(e){
           let digs=(e.target.classList)[1].toString().split("");
-          gameBoard.putMark(turn,digs[0],digs[1]);
-          gameBoard.findTie();
-
-          if(turn == player1){
-            turn = player2;
-            console.log(turn);
-          } 
-
-          else{
-            turn=player1;
-            console.log(turn);
-          }
+          screenController.putMark(turn,digs[0],digs[1]);
+          gameController.findTie();
+          turn = gameController.switchTurn(turn);
+          screenController.disPlayer()
         });
 
     })
@@ -72,14 +120,5 @@ const game = function(player1,player2,gameBoard){
 
 
 
-const player = (sign)=>{
-    return{sign};
-}
 
-const playerOne = player("X");
-const playerTwo = player("O");
-
-
-
-gameBoard.arrangefunc();
-game(playerOne,playerTwo,gameBoard);
+game();
