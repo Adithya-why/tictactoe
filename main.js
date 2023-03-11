@@ -64,7 +64,7 @@ const gameController = (function(){
             for(i=0;i<3;i++){
                 let srr = arrn[i];
                 if(srr.length===3){
-                if(srr.every(v=>(v==srr[0]))){
+                if(srr.every(v=>(v==srr[1]))){
                     win = true;
                     screenController.decWin();
                 }
@@ -178,8 +178,9 @@ const game = function(){
             if(!gameController.isWin()){
           let digs=(e.target.classList)[1].toString().split("");
           screenController.putMark(turn,digs[0],digs[1]);
-          gameController.findTie();
+          
           gameController.findWin();
+          gameController.findTie();
           turn = gameController.switchTurn(turn);
           screenController.disPlayer()
           
