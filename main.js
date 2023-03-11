@@ -4,8 +4,12 @@ const gameBoard = (function(){
 
     const getBoard=()=>arr;
 
+    const reboard = function(){
+        arr=[[],[],[]];
+    }
 
-    return {getBoard};
+
+    return {getBoard,reboard};
 })();
 
 
@@ -52,17 +56,67 @@ const gameController = (function(){
         }
 
     };
+    let win = false;
 
-
-    let findWin = function(){
-        for(i=0;i<arr.length;i++){
-            for(j=0;j<arr[0].length;j++){
-               
+    const findWin = function(){
+        arrn = gameBoard.getBoard();
+            //row wise
+            for(i=0;i<3;i++){
+                let srr = arrn[i];
+                if(srr.length===3){
+                if(srr.every(v=>(v==srr[0]))){
+                    win = true;
+                    screenController.decWin();
+                }
             }
-        }
-    }
+            }
 
-    return {playerOne,playerTwo,switchTurn,currentPlayerfunc,findTie,findWin}
+
+            //column wise
+            for(j=0;j<3;j++){
+            let celes = [];
+            for(i=0;i<3;i++){
+                celes.push(arrn[i][j]);
+            }
+            
+            if(celes.length===3 && celes.every(x=>(x!==undefined))){
+                if(celes.every(w=>(w==celes[0]))){
+                    win = true;
+                    screenController.decWin();
+                }
+            }}
+
+
+
+            //diagonal wise
+
+            
+            
+            if((arrn[0][0]==arrn[1][1]&&arrn[1][1]==arrn[2][2]&&arrn[1][1]!==undefined)  || (arrn[0][2]==arrn[1][1]&&arrn[1][1]==arrn[2][0]&&arrn[1][1]!==undefined)){
+                win = true;
+                screenController.decWin();
+            }
+        
+
+            
+            
+        }
+
+
+
+    const isWin=()=>win;
+
+
+    const reset = function(){
+        
+        gameBoard.reboard();
+        screenController.arrangefunc()
+        currentPlayer=playerOne;
+        win = false;
+    }
+    
+
+    return {playerOne,playerTwo,switchTurn,currentPlayerfunc,findTie,findWin,isWin,reset}
 })();
 
 
@@ -91,8 +145,21 @@ const screenController = (function(){
         divpl.innerHTML = `Player ${gameController.currentPlayerfunc().sign}`
     }
 
+    const decWin = function(){
+        console.log('won')
+        let winner = gameController.currentPlayerfunc();
+        const divpl = document.querySelector("h1");
+        divpl.innerHTML = `Player wins`;
+        console.log(winner);
+    }
 
-    return {arrangefunc,putMark,disPlayer};
+    
+        const bt = document.querySelector('button');
+        bt.addEventListener('click',gameController.reset)
+    
+
+
+    return {arrangefunc,putMark,disPlayer,decWin};
 })();
 
 
@@ -105,16 +172,22 @@ const game = function(){
     turn = player1;
     const divs = document.querySelectorAll(".r");
     screenController.disPlayer();
+    
     divs.forEach((div)=>{
         div.addEventListener('click',function(e){
+            if(!gameController.isWin()){
           let digs=(e.target.classList)[1].toString().split("");
           screenController.putMark(turn,digs[0],digs[1]);
           gameController.findTie();
+          gameController.findWin();
           turn = gameController.switchTurn(turn);
           screenController.disPlayer()
+          
+            }
         });
 
     })
+
 }
 
 
