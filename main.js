@@ -117,6 +117,8 @@ const gameController = (function(){
             switchTurn(currentPlayerfunc());
         }
         win = false;
+        const divpls = document.querySelector("h3");
+        divpls.innerHTML = `......................`;
     }
     
 
@@ -152,8 +154,8 @@ const screenController = (function(){
     const decWin = function(){
         console.log('won')
         let winner = gameController.currentPlayerfunc();
-        const divpl = document.querySelector("h1");
-        divpl.innerHTML = `Player wins`;
+        const divpls = document.querySelector("h3");
+        divpls.innerHTML = `${winner.sign} wins`;
         console.log(winner);
     }
 
