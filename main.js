@@ -44,6 +44,7 @@ const gameController = (function(){
 
     const currentPlayerfunc = ()=>currentPlayer;
 
+    let t= true;
     const findTie = function(){
         let t = true;
         arrn = gameBoard.getBoard();
@@ -111,7 +112,10 @@ const gameController = (function(){
         
         gameBoard.reboard();
         screenController.arrangefunc()
-        currentPlayer=playerOne;
+        console.log(currentPlayerfunc())
+        if(currentPlayerfunc().sign === "O"){
+            switchTurn(currentPlayerfunc());
+        }
         win = false;
     }
     
@@ -169,7 +173,7 @@ const game = function(){
     player1 = gameController.playerOne;
     player2 = gameController.playerTwo;
    
-    turn = player1;
+    turn = gameController.currentPlayerfunc();
     const divs = document.querySelectorAll(".r");
     screenController.disPlayer();
     
